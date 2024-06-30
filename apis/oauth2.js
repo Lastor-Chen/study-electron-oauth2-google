@@ -1,10 +1,23 @@
 // @ts-check
+import fs from 'node:fs'
+import path from 'node:path'
+
 import axios from 'axios'
 
-const clientId = 'your_google_oauth2_client_id'
-const clientSecret = 'your_google_oauth2_client_secret'
+let clientId = 'your_google_oauth2_client_id'
+let clientSecret = 'your_google_oauth2_client_secret'
+export let redirectUri = 'your_google_oauth2_redirect_uri'
 
-export const redirectUri = 'http://localhost/oauth/google'
+fs.readFile(path.join(process.cwd(), '/oauth2.keys.json'), 'utf8', (err, data) => {
+  if (err) {
+    console.log(`[Error] Cannot found "./oauth2.keys.json"`)
+  } else {
+    const json = JSON.parse(data)
+    clientId = json.web.client_id
+    clientSecret = json.web.client_secret
+    redirectUri = json.web.redirect_uris[0]
+  }
+})
 
 export const credentials = {
   accessToken: '',
