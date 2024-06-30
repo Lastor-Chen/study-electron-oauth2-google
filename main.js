@@ -2,7 +2,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
 
-import { credentials, redirectUri, getAuthUrl, postExchangeToken, getUserInfo } from './apis/oauth2.js'
+import { redirectUri, getAuthUrl, postExchangeToken, getUserInfo } from './apis/oauth2.js'
 
 /** @type {BrowserWindow | undefined} */
 let win
@@ -47,8 +47,6 @@ ipcMain.on('oauthSignin', () => {
       console.log('auth callback', { code, error })
       if (code) {
         const tokens = await postExchangeToken(code)
-        credentials.accessToken = tokens?.access_token || ''
-        credentials.refreshToken = tokens?.refresh_token || ''
 
         win?.webContents.send('access-token', tokens)
       }
